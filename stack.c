@@ -35,7 +35,7 @@ void main_op(char **argv, int count)
 					exit(EXIT_FAILURE);
 				}
 			}
-			else
+			else if (strcmp(choice, "pall") == 0)
 				pall(top);
 		}
 	}
