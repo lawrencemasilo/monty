@@ -10,11 +10,22 @@ int main(int argc, char **argv)
 {
 	char **op_av, *buffer;
 	int count;
-	(void) argc;
 
+	if ((argv[1] == NULL) || (argc > 2))
+	{
+		write(STDERR_FILENO, "USAGE: monty file\n",
+				strlen("USAGE: monty file\n"));
+		exit(EXIT_FAILURE);
+	}
 	if (argv[1] != NULL)
 	{
 		buffer = _read(argv);
+		if (buffer == NULL)
+		{
+			write(STDERR_FILENO, "USAGE: monty file\n",
+					strlen("USAGE: monty file\n"));
+			exit(EXIT_FAILURE);
+		}
 		op_av = tokenize(buffer, "$\n");
 		count = line_count(argv);
 		main_op(op_av, count);
@@ -35,6 +46,12 @@ char **_token(char *argv)
 	int i = 0;
 
 	av = malloc(sizeof(char *) * sizeof(argv) + 1);
+	if (av == NULL)
+	{
+		write(STDERR_FILENO, "Error: malloc failed\n",
+				strlen("Error: malloc failed\n"));
+		exit(EXIT_FAILURE);
+	}
 	token = strtok(argv, " ");
 	while (token != NULL)
 	{
@@ -59,12 +76,18 @@ char *_read(char **argv)
 	ssize_t readn;
 
 	buffer = malloc(sizeof(char *) * 1024);
+	if (buffer == NULL)
+	{
+		write(STDERR_FILENO, "Error: malloc failed\n",
+				strlen("Error: malloc failed\n"));
+		exit(EXIT_FAILURE);
+	}
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
 	{
-		write(STDERR_FILENO, "Error: Can't open file ",
-				strlen("Error: Can't open file "));
-		printf("%s\n", argv[1]);
+		write(STDERR_FILENO, "Error: Can't open ",
+				strlen("Error: Can't open "));
+		printf("%s\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
 	readn = read(fd, buffer, 1024);
@@ -95,6 +118,12 @@ char **tokenize(char *buffer, char *delim)
 		cmd_count++;
 	}
 	op_av = malloc(sizeof(char *) * cmd_count + 1);
+	if (op_av == NULL)
+	{
+		write(STDERR_FILENO, "Error: malloc failed\n",
+				strlen("Error: malloc failed\n"));
+		exit(EXIT_FAILURE);
+	}
 	token2 = strtok(buf_copy, delim);
 	while (token2 != NULL)
 	{
