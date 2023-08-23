@@ -29,7 +29,7 @@ void main_op(char **argv, int count)
 					push(value, &top);
 				else
 				{
-					printf("l %d:", j + 1);
+					printf("L %d:", j + 1);
 					write(STDERR_FILENO, "usage: push integer\n",
 							strlen("usage: push integer\n"));
 					exit(EXIT_FAILURE);
@@ -37,9 +37,16 @@ void main_op(char **argv, int count)
 			}
 			else if (strcmp(choice, "pall") == 0)
 				pall(top);
+			else
+			{
+				printf("L %d:", j + 1);
+				write(STDERR_FILENO, "unknown instruction ",
+						strlen("unknown instruction "));
+				printf("%s\n", argv[0]);
+				exit(EXIT_FAILURE);
+			}
 		}
 	}
-	free(av);
 }
 
 
@@ -69,7 +76,11 @@ void push(int value, stack_t **top)
 	stack_t *ptr = malloc(sizeof(stack_t));
 
 	if (ptr == NULL)
-		return;
+	{
+		write(STDERR_FILENO, "Error: malloc failed\n",
+				strlen("Error: malloc failed\n"));
+		exit(EXIT_FAILURE);
+	}
 	if (temp != NULL)
 	{
 		temp->prev = ptr;
