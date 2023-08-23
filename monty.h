@@ -39,6 +39,8 @@ typedef struct instruction_s
 char **tokenize(char *buffer, char *delim);
 char *_read(char **argv);
 int line_count(char **argv);
-void main_op(char *argv);
+void main_op(char **argv, int count);
 char **_token(char *argv);
+void push(int value, stack_t **top);
+void pall(stack_t *top);
 #endif
