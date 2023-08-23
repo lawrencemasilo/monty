@@ -8,20 +8,16 @@
  */
 int main(int argc, char **argv)
 {
-	char **op_av, *buffer, **av;
-	int i = 0;
+	char **op_av, *buffer;
+	int count;
 	(void) argc;
 
 	if (argv[1] != NULL)
 	{
 		buffer = _read(argv);
 		op_av = tokenize(buffer, "$\n");
-		av = _token(op_av[0]);
-		while (av[i] != NULL)
-		{
-			printf("%s\n", av[i]);
-			i++;
-		}
+		count = line_count(argv);
+		main_op(op_av, count);
 	}
 	free(buffer);
 	free(op_av);
@@ -109,7 +105,6 @@ char **tokenize(char *buffer, char *delim)
 	op_av[i] = NULL;
 	if (op_av == NULL)
 	{
-		free(op_av);
 		return (NULL);
 	}
 	return (op_av);
@@ -125,7 +120,7 @@ int line_count(char **argv)
 	char *buffer, *token;
 	int count = 0;
 
-	 buffer = _read(argv);
+	buffer = _read(argv);
 	token = strtok(buffer, "$\n");
 	while (token != NULL)
 	{
